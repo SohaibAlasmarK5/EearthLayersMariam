@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>طبقات الأرض</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      background: #04070f;
+      font-family: 'Cairo', sans-serif;
+      color: white;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* =========================
+       INTRO SCREEN
+    ========================= */
+
+    .intro-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 7, 15, .65);
+      backdrop-filter: blur(18px);
+    }
+
+    .intro-content {
+      position: relative;
+      width: min(760px, 92%);
+      padding: 50px;
+      border-radius: 30px;
+
+      background:
+        rgba(255, 255, 255, .05);
+
+      border:
+        1px solid rgba(255, 255, 255, .08);
+
+      text-align: center;
+
+      animation: fadeUp 1s ease;
+    }
+
+    .intro-content h1 {
+      font-size: 62px;
+      margin-bottom: 30px;
+      color: #4da6ff;
+      font-weight: 900;
+    }
+
+    .intro-text p {
+      margin-bottom: 16px;
+      font-size: 20px;
+      line-height: 2;
+      color: #e7edf7;
+    }
+
+    .about {
+      margin-top: 30px;
+      color: #d1d9e8;
+    }
+
+    #startBtn {
+      margin-top: 35px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+
+      padding: 18px 45px;
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(135deg,
+          #4da6ff,
+          #2563eb);
+
+      color: white;
+
+      font-size: 19px;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+
+      transition: .35s;
+    }
+
+    #startBtn:hover {
+      transform: scale(1.06);
+
+      box-shadow:
+        0 0 30px rgba(77, 166, 255, .5);
+    }
+
+    .hide-intro {
+      opacity: 0;
+      pointer-events: none;
+      transition: 1s;
+    }
+
+    @keyframes fadeUp {
+
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+    }
+
+    /* =========================
+       PANEL
+    ========================= */
+
+    .panel {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      width: 270px;
+
+      background:
+        rgba(10, 15, 25, .82);
+
+      border:
+        1px solid rgba(255, 255, 255, .08);
+
+      border-radius: 22px;
+
+      padding: 22px;
+
+      z-index: 5;
+
+      backdrop-filter: blur(12px);
+    }
+
+    .title {
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    .sub {
+      font-size: 12px;
+      color: #8b94a7;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      border:
+        1px solid rgba(255, 255, 255, .08);
+
+      border-right:
+        5px solid var(--c);
+
+      border-radius: 14px;
+
+      padding: 15px;
+
+      margin-bottom: 14px;
+
+      cursor: pointer;
+
+      transition: .25s;
+
+      background:
+        rgba(255, 255, 255, .03);
+    }
+
+    .card:hover,
+    .card.active {
+
+      background:
+        rgba(255, 255, 255, .08);
+
+      transform: translateX(-6px);
+    }
+
+    .card h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+      color: var(--c);
+    }
+
+    .card p {
+      font-size: 12px;
+      color: #c5c9d3;
+      line-height: 1.9;
+    }
+
+    /* =========================
+       LABEL
+    ========================= */
+
+    .info {
+      position: fixed;
+      bottom: 35px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 36px;
+      font-weight: 900;
+      opacity: 0;
+      transition: .25s;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .info.show {
+      opacity: 1;
+    }
+
+    /* =========================
+   MOBILE RESPONSIVE FIX
+========================= */
+
+    @media (max-width: 768px) {
+
+      /* Intro screen */
+      .intro-content {
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .intro-content h1 {
+        font-size: 32px;
+      }
+
+      .intro-text p {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      #startBtn {
+        padding: 12px 25px;
+        font-size: 15px;
+      }
+
+      /* Side panel becomes smaller */
+      .panel {
+        width: 85vw;
+        right: 50%;
+        transform: translateX(50%);
+        top: 10px;
+        padding: 14px;
+        border-radius: 16px;
+      }
+
+      .title {
+        font-size: 22px;
+      }
+
+      .sub {
+        font-size: 10px;
+      }
+
+      .card {
+        padding: 10px;
+      }
+
+      .card h3 {
+        font-size: 14px;
+      }
+
+      .card p {
+        font-size: 11px;
+      }
+
+      /* Bottom label */
+      .info {
+        font-size: 22px;
+        bottom: 20px;
+      }
+
+      /* Prevent accidental overflow feel */
+      body {
+        overflow: hidden;
+      }
+
+      @media (max-width: 768px) {
+
+        /* hide the floating panel completely */
+        .panel {
+          display: none;
+        }
+
+        /* make intro more compact */
+        .intro-content {
+          padding: 18px;
+          width: 92%;
+        }
+
+        .intro-content h1 {
+          font-size: 28px;
+        }
+
+        .intro-text p {
+          font-size: 13px;
+        }
+
+        #startBtn {
+          font-size: 14px;
+          padding: 12px 20px;
+        }
+
+        /* make label smaller */
+        .info {
+          font-size: 20px;
+          bottom: 15px;
+        }
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       INTRO
+  ========================== -->
+
+  <div class="intro-screen" id="introScreen">
+
+    <div class="overlay"></div>
+
+    <div class="intro-content">
+
+      <h1>طبقات الأرض</h1>
+
+      <div class="intro-text">
+
+        <p>
+          <strong>العمل مقدم من الطالبة:</strong>
+          مريم اسماعيل الأسمر
+        </p>
+
+        <p>
+          <strong>الصف:</strong>
+          السابع
+        </p>
+
+        <p>
+          <strong>المدرسة:</strong>
+          مدرسة سكينة بنت الحسين الأساسية المختلطة
+        </p>
+
+        <p>
+          <strong>بإشراف المعلمة:</strong>
+          ماجدة عقيل
+        </p>
+
+        <p class="about">
+          <strong>نبذة عن المشروع:</strong><br>
+          يوضح هذا العمل طبقات الأرض وأغلفتها بطريقة
+          ثلاثية الأبعاد تفاعلية تساعد على فهم مكونات
+          الأرض بشكل مبسط وممتع.
+        </p>
+
+      </div>
+
+      <button id="startBtn">
+        استكشاف المشروع
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       PANEL
+  ========================== -->
+
+  <div class="panel">
+
+    <div class="title">
+      طبقات الأرض
+    </div>
+
+    <div class="sub">
+      نموذج ثلاثي الأبعاد
+    </div>
+
+    <div class="card" data-layer="0" style="--c:#ff5a36">
+      <h3>اللب الداخلي</h3>
+      <p>
+        أعمق طبقات الأرض ويتكون من الحديد الصلب
+      </p>
+    </div>
+
+    <div class="card" data-layer="1" style="--c:#ffb347">
+      <h3>اللب الخارجي</h3>
+      <p>
+        حديد ونيكل سائل مسؤول عن المجال المغناطيسي
+      </p>
+    </div>
+
+    <div class="card" data-layer="2" style="--c:#c97b3b">
+      <h3>الوشاح</h3>
+      <p>
+        طبقة سميكة من الصخور الساخنة شبه المنصهرة
+      </p>
+    </div>
+
+    <div class="card" data-layer="3" style="--c:#4da6ff">
+      <h3>القشرة الأرضية</h3>
+      <p>
+        السطح الخارجي الذي نعيش عليه
+      </p>
+    </div>
+
+  </div>
+
+  <!-- =========================
+       LABEL
+  ========================== -->
+
+  <div class="info" id="label"></div>
+
+  <!-- =========================
+       CANVAS
+  ========================== -->
+
+  <canvas id="canvas"></canvas>
+
+  <!-- =========================
+       THREE JS
+  ========================== -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+
+    /* =========================
+       INTRO BUTTON
+    ========================= */
+
+    const introScreen =
+      document.getElementById("introScreen");
+
+    const startBtn =
+      document.getElementById("startBtn");
+
+    startBtn.addEventListener("click", () => {
+
+      introScreen.classList.add("hide-intro");
+
+      setTimeout(() => {
+
+        introScreen.style.display = "none";
+
+      }, 1000);
+
+    });
+
+    /* =========================
+       SCENE
+    ========================= */
+
+    const scene = new THREE.Scene();
+
+    const camera =
+      new THREE.PerspectiveCamera(
+        45,
+        innerWidth / innerHeight,
+        0.1,
+        100
+      );
+
+    camera.position.set(0, 0, 4);
+
+    const renderer =
+      new THREE.WebGLRenderer({
+        canvas:
+          document.getElementById("canvas"),
+        antialias: true
+      });
+
+    renderer.setSize(
+      innerWidth,
+      innerHeight
+    );
+
+    renderer.setPixelRatio(
+      devicePixelRatio
+    );
+
+    scene.background =
+      new THREE.Color(0x04070f);
+
+    /* =========================
+       LIGHTS
+    ========================= */
+
+    const ambient =
+      new THREE.AmbientLight(
+        0xffffff,
+        .65
+      );
+
+    scene.add(ambient);
+
+    const sun =
+      new THREE.DirectionalLight(
+        0xffffff,
+        1.5
+      );
+
+    sun.position.set(5, 3, 5);
+
+    scene.add(sun);
+
+    /* =========================
+       STARS
+    ========================= */
+
+    const starGeo =
+      new THREE.BufferGeometry();
+
+    const stars = [];
+
+    for (let i = 0; i < 2500; i++) {
+
+      stars.push(
+        (Math.random() - .5) * 150,
+        (Math.random() - .5) * 150,
+        (Math.random() - .5) * 150
+      );
+
+    }
+
+    starGeo.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(
+        stars,
+        3
+      )
+    );
+
+    const starMat =
+      new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: .03
+      });
+
+    const starField =
+      new THREE.Points(
+        starGeo,
+        starMat
+      );
+
+    scene.add(starField);
+
+    /* =========================
+       EARTH
+    ========================= */
+
+    const earth =
+      new THREE.Group();
+    const loader = new THREE.TextureLoader();
+    const earthTexture = loader.load("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");
+    scene.add(earth);
+
+    /* =========================
+       LAYERS
+    ========================= */
+
+    const layers = [
+
+      {
+        name: "اللب الداخلي",
+        color: 0xffe6a3,
+        inner: 0,
+        outer: .28
+      },
+
+      {
+        name: "اللب الخارجي",
+        color: 0xff8c42,
+        inner: .28,
+        outer: .48
+      },
+
+      {
+        name: "الوشاح",
+        color: 0xb35c2e,
+        inner: .48,
+        outer: .82
+      },
+
+      {
+        name: "القشرة الأرضية",
+        color: 0x2d6a4f,
+        inner: .82,
+        outer: 1
+      }
+
+    ];
+
+    const meshes = [];
+
+    layers.forEach((layer, i) => {
+
+      const geo =
+        new THREE.SphereGeometry(
+          layer.outer,
+          64,
+          64,
+          0,
+          Math.PI
+        );
+
+      const mat = new THREE.MeshStandardMaterial({
+
+        map: i === 3 ? earthTexture : null,
+
+        color: i === 3 ? 0xffffff : layer.color,
+
+        roughness: i === 3 ? 1 : 0.65,
+
+        metalness: i === 3 ? 0 : 0.08,
+
+        emissive: 0x000000
+
+      });
+
+      const mesh =
+        new THREE.Mesh(
+          geo,
+          mat
+        );
+
+      mesh.userData.index = i;
+
+      earth.add(mesh);
+
+      meshes.push(mesh);
+
+      const ring =
+        new THREE.Mesh(
+
+          new THREE.RingGeometry(
+            layer.inner,
+            layer.outer,
+            80
+          ),
+
+          new THREE.MeshStandardMaterial({
+
+            color: layer.color,
+
+            side:
+              THREE.DoubleSide
+
+          })
+
+        );
+
+      ring.rotation.y =
+        Math.PI / 2;
+
+      ring.userData.index = i;
+
+      earth.add(ring);
+
+      meshes.push(ring);
+
+    });
+
+    /* =========================
+       ATMOSPHERE
+    ========================= */
+
+    const atmosphere =
+      new THREE.Mesh(
+
+        new THREE.SphereGeometry(
+          1.03,
+          64,
+          64
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+          color: 0x6bbcff,
+
+          transparent: true,
+
+          opacity: .12,
+
+          side: THREE.BackSide
+
+        })
+
+      );
+
+    earth.add(atmosphere);
+    /* =========================
+       AUDIO
+    ========================= */
+
+    const sounds = [
+
+      new Audio(
+        "https://cdn.jsdelivr.net/gh/SohaibAlasmarK5/Mriam/core.mp3"
+      ),
+
+      new Audio(
+        "https://cdn.jsdelivr.net/gh/SohaibAlasmarK5/Mriam/outercore.mp3"
+      ),
+
+      new Audio(
+        "https://cdn.jsdelivr.net/gh/SohaibAlasmarK5/Mriam/mantle.mp3"
+      ),
+
+      new Audio(
+        "https://cdn.jsdelivr.net/gh/SohaibAlasmarK5/Mriam/crust.mp3"
+      )
+
+    ];
+
+    sounds.forEach(sound => {
+
+      sound.volume = 0.7;
+
+    });
+    /* =========================
+       INTERACTION
+    ========================= */
+
+    const raycaster =
+      new THREE.Raycaster();
+
+    const mouse =
+      new THREE.Vector2();
+
+    const label =
+      document.getElementById("label");
+
+    const cards =
+      document.querySelectorAll(".card");
+
+    let hovered = -1;
+
+    window.addEventListener(
+      "mousemove",
+      (e) => {
+
+        mouse.x =
+          (e.clientX / innerWidth)
+          * 2 - 1;
+
+        mouse.y =
+          -(e.clientY / innerHeight)
+          * 2 + 1;
+
+      }
+    );
+
+    function setHover(index) {
+
+      if (index === hovered) return;
+
+      hovered = index;
+
+      meshes.forEach((m) => {
+
+        const layerIndex =
+          m.userData.index;
+
+        m.material.transparent =
+          index !== -1;
+
+        if (index === -1) {
+
+          m.material.opacity = 1;
+
+        } else {
+
+          if (layerIndex === index) {
+
+            m.material.opacity = 1;
+
+          } else {
+
+            m.material.opacity = .12;
+
+          }
+
+        }
+
+        if (m.material.emissive) {
+
+          m.material.emissive.setHex(
+
+            layerIndex === index
+              ? layers[layerIndex].color
+              : 0x000000
+
+          );
+
+          m.material.emissiveIntensity =
+            layerIndex === index
+              ? .4
+              : 0;
+
+        }
+
+      });
+
+      cards.forEach((card, i) => {
+
+        card.classList.toggle(
+          "active",
+          i === index
+        );
+
+      });
+
+      if (index >= 0) {
+        sounds.forEach(sound => {
+
+          sound.pause();
+          sound.currentTime = 0;
+
+        });
+
+        sounds[index].play();
+        label.innerHTML =
+          layers[index].name;
+
+        label.style.color =
+          "#" +
+          layers[index]
+            .color
+            .toString(16);
+
+        label.classList.add("show");
+
+      } else {
+
+        label.classList.remove("show");
+
+      }
+
+    }
+
+    /* =========================
+       CARD HOVER
+    ========================= */
+
+    cards.forEach(card => {
+
+      card.addEventListener(
+        "mouseenter",
+        () => {
+
+          setHover(
+            Number(card.dataset.layer)
+          );
+
+        }
+      );
+
+      card.addEventListener(
+        "mouseleave",
+        () => {
+
+          setHover(-1);
+
+        }
+      );
+
+    });
+
+    /* =========================
+       DRAG ROTATION
+    ========================= */
+
+    let rotX = .15;
+    let rotY = -.45;
+
+    let dragging = false;
+
+    let px = 0;
+    let py = 0;
+
+    window.addEventListener(
+      "mousedown",
+      (e) => {
+
+        dragging = true;
+
+        px = e.clientX;
+        py = e.clientY;
+
+      }
+    );
+
+    window.addEventListener(
+      "mouseup",
+      () => {
+
+        dragging = false;
+
+      }
+    );
+
+    window.addEventListener(
+      "mousemove",
+      (e) => {
+
+        if (!dragging) return;
+
+        rotY +=
+          (e.clientX - px) * .005;
+
+        rotX +=
+          (e.clientY - py) * .005;
+
+        px = e.clientX;
+        py = e.clientY;
+
+      }
+    );
+
+    /* =========================
+       ANIMATE
+    ========================= */
+
+    function animate() {
+
+      requestAnimationFrame(
+        animate
+      );
+
+      earth.rotation.x +=
+        (rotX - earth.rotation.x)
+        * .06;
+
+      earth.rotation.y +=
+        (rotY - earth.rotation.y)
+        * .06;
+
+      raycaster.setFromCamera(
+        mouse,
+        camera
+      );
+
+      const hits =
+        raycaster.intersectObjects(
+          meshes
+        );
+
+      if (hits.length) {
+
+        setHover(
+          hits[0].object.userData.index
+        );
+
+      } else {
+
+        setHover(-1);
+
+      }
+
+      renderer.render(
+        scene,
+        camera
+      );
+
+    }
+
+    animate();
+
+    /* =========================
+       RESIZE
+    ========================= */
+
+    window.addEventListener(
+      "resize",
+      () => {
+
+        camera.aspect =
+          innerWidth / innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+          innerWidth,
+          innerHeight
+        );
+
+      }
+    );
+    /* =========================
+       TOUCH ROTATION SUPPORT
+    ========================= */
+
+    let touchDragging = false;
+    let tx = 0;
+    let ty = 0;
+
+    window.addEventListener("touchstart", (e) => {
+      touchDragging = true;
+      tx = e.touches[0].clientX;
+      ty = e.touches[0].clientY;
+    });
+
+    window.addEventListener("touchend", () => {
+      touchDragging = false;
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      if (!touchDragging) return;
+
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+
+      rotY += (x - tx) * 0.005;
+      rotX += (y - ty) * 0.005;
+
+      tx = x;
+      ty = y;
+    });
+  </script>
+
+</body>
+
+</html>
